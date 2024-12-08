@@ -1,37 +1,41 @@
-deps-dev:
-	sudo pip2 install -r requirements_dev
+DOCKER_IMAGE_NAME=rabbitmqalertdev
+DOCKER_COMPOSE_FILE="`pwd`/dev/docker-compose.yaml"
+DOCKER_COMPOSE_PROJECT=rmqalert-dev
+DOCKER_COMPOSE_CMD=docker compose -p $(DOCKER_COMPOSE_PROJECT) -f $(DOCKER_COMPOSE_FILE)
 
-test: clean
-	python2 -m rabbitmqalert.tests.test_apiclient -b; \
-	python2 -m rabbitmqalert.tests.test_argumentsparser -b; \
-	python2 -m rabbitmqalert.tests.test_conditionchecker -b; \
-	python2 -m rabbitmqalert.tests.test_logger -b; \
-	python2 -m rabbitmqalert.tests.test_notifier -b; \
-	python2 -m rabbitmqalert.tests.test_rabbitmqalert -b; \
-	python2 -m rabbitmqalert.tests.models.test_argument -b;
+precommit:
+	@pre-commit run --all-files
 
-test-install:
-	sudo python2 setup.py install
+# Example: make bump patch
+bump:
+	@bump2version --config-file .bumpversion.cfg --allow-dirty $(filter-out $@,$(MAKECMDGOALS))
 
-clean:
-	rm -rf build/ dist/ rabbitmq_alert.egg-info/ .eggs/
-	find . -name *.pyc -delete
+build:
+	@docker build -t ${DOCKER_IMAGE_NAME} .
 
-dist: clean
-	python2 setup.py sdist
+bash: build
+	@docker run \
+		-v "`pwd`:/code" \
+		--rm -it ${DOCKER_IMAGE_NAME} bash
 
-dist-inspect:
-	tar -tvf dist/*
+run: build
+	@docker run \
+		--rm -it ${DOCKER_IMAGE_NAME}
 
-publish: dist
-	twine upload dist/*
+dc-ps:
+	$(DOCKER_COMPOSE_CMD) ps
 
-lint:
-	pylint rabbitmqalert --ignore=tests
+dc-bash:
+	$(DOCKER_COMPOSE_CMD) exec $(filter-out $@,$(MAKECMDGOALS)) bash
 
-test-publish: dist
-	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+dc-run:
+	$(DOCKER_COMPOSE_CMD) up --force-recreate --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 
-test-metadata: clean
-	python2 setup.py check --restructuredtext; \
-	python2 setup.py checkdocs
+dc-build-and-run:
+	$(DOCKER_COMPOSE_CMD) up --force-recreate --build
+
+dc-build:
+	$(DOCKER_COMPOSE_CMD) build $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+	@:

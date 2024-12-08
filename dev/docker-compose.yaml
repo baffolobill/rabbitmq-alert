@@ -1,0 +1,49 @@
+services:
+  rabbitmq:
+    hostname: rabbitmq
+    restart: unless-stopped
+    image: rabbitmq:4.0.2-management-alpine
+    sysctls:
+      - net.core.somaxconn=16384
+      - net.ipv4.ip_local_port_range=1024 65000
+    ulimits:
+      nproc: 32768
+      nofile:
+        soft: 100000
+        hard: 100000
+    mem_limit: 1024m
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_VHOST=primary
+    volumes:
+      - ./configs/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
+  rmqalert:
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    sysctls:
+      - net.core.somaxconn=16384
+      - net.ipv4.ip_local_port_range=1024 65000
+    user: root
+    depends_on:
+      rabbitmq:
+        condition: service_started
+    build:
+      context: ../
+      args:
+        INSTALL_DEV: 'false'
+    command: ['rabbitmq-alert', '-c', '/config.yaml']
+    volumes:
+      - ../src:/code
+      - ./configs/rmq_alert/rabbitmq-alert.dev.yaml:/config.yaml
