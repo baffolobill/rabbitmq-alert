@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "rabbitmqalert"
+version = "0.0.0"
+description = "Send notifications when predefined conditions are met."
+authors = ["Alexander Volkov <baffolobill@yandex.ru>"]
+# Forked version authors:
+# authors = ["Germano Fronza (gfronza), Kostas Milonas (mylk), velika12, Robert Kopaczewski (23doors), Ivan Timeev (TeslA1402), Anderson Diego Kulpa Fachini (anderson-fachini), Dawid Deregowski (Venomen)"]
+license = "BSD-3-Clause"
+readme = "README.md"
+packages = [
+  { include = "rabbitmqalert", from = "src" }
+]
+exclude = [
+  "*/tests/"
+]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3 :: Only",
+]
+keywords = ["rabbitmq", "alert", "monitor"]
+homepage = "https://github.com/baffolobill/rabbitmq-alert"
+repository = "https://github.com/baffolobill/rabbitmq-alert"
+documentation = "https://github.com/baffolobill/rabbitmq-alert"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.32.3"
+click = "^8.1.7"
+pyyaml = "^6.0.2"
+yamlenv = "^0.7.1"
+
+[tool.poetry.scripts]
+rabbitmq-alert = "rabbitmqalert:main.main"
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.2"
+twine = "^6.0.1"
+docutils = "^0.21.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+line_length = 80
+multi_line_output = 3
+use_parentheses = true
+include_trailing_comma = true
+force_grid_wrap = 3
+ensure_newline_before_comments = true
+skip_gitignore = true
+skip = ['setup.py']
+known_first_party = [
+    'rabbitmqalert',
+]
+lines_between_sections = 1
+add_imports = ['from __future__ import annotations']
+
+[tool.flake8]
+max-line-length = 120
+max-function-length = 100
+exclude = ['.git', 'docs', 'docs/*']
+adjustable-default-max-complexity = 8
+max-adjustable-complexity = 10
+min_coverage_percents = 100
+max_parameters_amount = 10
+max_cognitive_complexity = 15
+max-returns-amount = 4
+# Config for: flake8-future-annotations
+check-future-annotations = true

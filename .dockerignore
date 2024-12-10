@@ -1,0 +1,9 @@
+.*
+dev
+LICENSE
+Makefile
+!src
+!tests
+!pyproject.toml
+!poetry.lock
+!README.md

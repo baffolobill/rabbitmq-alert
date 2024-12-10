@@ -1,0 +1,105 @@
+exclude: >
+  (?x)(
+      LICENSE$|
+      ^\.mypy_cache/|
+      ^\.pytest_cache/|
+      ^\.sonarlint/|
+      ^\.vscode/|
+      ^_tests_/|
+      ^docs/
+  )
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: double-quote-string-fixer
+      - id: end-of-file-fixer
+        exclude: \.svg$
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-no-eval
+      - id: python-use-type-annotations
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.17.0
+    hooks:
+      # Криво работает с некоторыми версиями Python.
+      # (https://github.com/python/cpython/issues/120343)
+      # Следует включать время от времени и руками проверять,
+      # корректно ли внес правки. Либо поднимать через docker
+      # с зафиксированной версией python.
+      - id: pyupgrade
+        args: [--py311-plus]
+
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+        - flake8-pyproject
+        - flake8-bugbear==24.4.26
+        - flake8-builtins==2.5.0
+        - flake8-commas==4.0.0
+        - flake8-comprehensions==3.15.0
+        - flake8-debugger==4.1.2
+        # - flake8-docstrings==1.7.0
+        - flake8-functions==0.0.8
+        - flake8-polyfill==1.0.2
+        - flake8-pytest-style==2.0.0
+        - flake8-print==5.0.0
+        - flake8-quotes==3.4.0
+        - flake8-string-format==0.3.0
+        - flake8-todo==0.7
+        - flake8-annotations-complexity==0.0.8
+        - flake8-variables-names==0.0.6
+        - flake8-class-attributes-order==0.1.3
+        - flake8-broken-line==1.0.0
+        - flake8-cognitive-complexity==0.1.0
+        - cognitive-complexity==1.3.0
+        - flake8-fine-pytest==1.0.3
+        - mypy-extensions==1.0.0
+        - flake8-future-annotations==1.1.0
+        - flake8-modern-annotations==1.6.0
+        - flake8-multiline-conditionals-comprehensions==2.0.0
+        # - flake8-force-keyword-arguments==2.0.0
+
+  # TODO: сейчас слишком много ошибок выдает. Надо решить,
+  # TODO: заигнорить их или исправить.
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.10.1
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies:
+  #       - types-requests
+  #       - types-pytz
+  #       - types-python-dateutil
+  #       entry: mypy .
+  #       pass_filenames: false
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-ast
+      - id: check-json
+      - id: check-yaml
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: debug-statements
+      - id: check-added-large-files
+      - id: check-byte-order-marker
+      - id: detect-private-key
+      - id: check-builtin-literals
+      - id: check-docstring-first
+
+  - repo: https://github.com/PyCQA/isort
+    rev: '5.13.2'
+    hooks:
+      - id: isort

@@ -1,4 +1,0 @@
-include rabbitmqalert/config/config.ini.example
-include rabbitmqalert/config/service/rabbitmq-alert.service
-include rabbitmqalert/config/service/rabbitmq-alert
-include README.rst

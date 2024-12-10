@@ -1,0 +1,57 @@
+general:
+  # Conditions check frequency, in seconds.
+  check_rate: 10
+  # Logging level: DEBUG, INFO, ERROR, CRITICAL, WARNING.
+  loglevel: 'INFO'
+  log_format: '[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s'
+
+server:
+  # Displayed in notification instead of "url".
+  name: Primary RabbitMQ Server
+  # RabbitMQ API url.
+  # Please note, that rabbitmq management plugin uses port "15672".
+  url: http://rabbitmq:15672
+  # RabbitMQ API username
+  username: guest
+  # RabbitMQ API password
+  password: guest
+  # Name of the vhost to inspect
+  vhost: primary
+  # List of queue names to inspect
+  queues: []
+  # Discover queues
+  queues_discovery: true
+
+telegram:
+  enabled: false
+  bot_id: "123:asdfasdfasdfasdf"
+  chat_id: -123123123123123
+
+rules:
+  queue:
+    default:
+      # Size of Ready messages on the queue to alert as warning
+      ready_queue_size: 0
+      # Size of the Unacknowledged messages on the queue to alert as warning
+      unack_queue_size: 0
+      # Size of the Total messages on the queue to alert as warning
+      total_queue_size: 0
+      # The number of consumers that should be connected to the queue
+      queue_consumers_connected: 1
+    # Example per-queue conditions
+    # queue-name:
+    #   ready_queue_size: 0
+    #   unack_queue_size: 0
+    #   total_queue_size: 0
+    #   queue_consumers_connected: 1
+  node:
+    # The number of nodes running
+    nodes_running: 1
+    # Memory used by each node in MBs
+    node_memory_used_mb: 100
+  connection:
+    # The number of open connections
+    open_connections: 1
+  consumer:
+    # The number of consumers that should be connected
+    consumers_connected: 1
