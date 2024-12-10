@@ -7,6 +7,7 @@
 - [x] add bumpversion
 - [ ] migrate to asyncio
 - [ ] send separted notification for "up" and "down" events (condition fulfilled and not)
+- [ ] collect all events to notify about into single message
 - [ ] allow to specify for each rule which notification channel to use to send (like "handlers" in "loggers")
 - [ ] allow to specify how often to send notification for each event
 - [ ] add rule to notify about problems to connect to rabbitmq api
