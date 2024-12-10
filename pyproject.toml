@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rabbitmqalert"
-version = "0.0.0"
+version = "0.0.1"
 description = "Send notifications when predefined conditions are met."
 authors = ["Alexander Volkov <baffolobill@yandex.ru>"]
 # Forked version authors:
