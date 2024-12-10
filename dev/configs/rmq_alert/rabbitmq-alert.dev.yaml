@@ -26,6 +26,8 @@ telegram:
   enabled: false
   bot_id: "123:asdfasdfasdfasdf"
   chat_id: -123123123123123
+  # If you wanna send to a topic in supergroup.
+  chat_thread_id: 
 
 rules:
   queue:

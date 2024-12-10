@@ -26,6 +26,10 @@ from .notifier import Notifier
 @click.option('--telegram-bot-id', 'telegram_bot_id', help='Telegram bot id to send from.', type=str)
 @click.option('--telegram-chat-id', 'telegram_chat_id', help='Telegram channel id to send to.', type=str)
 @click.option(
+    '--telegram-chat-thread-id', 'telegram_chat_thread_id', 
+    help='Telegram thread (topic) id to send to.', type=str,
+)
+@click.option(
     '--telegram-test', 'telegram_test', is_flag=True, default=False,
     help='Send test messaage to Telegram and exit.',
 )

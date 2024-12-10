@@ -30,9 +30,16 @@ class TelegramNotifier:
 
     api_url = 'https://api.telegram.org'
 
-    def __init__(self, bot_token: str, chat_id: str, notifier: Notifier):
+    def __init__(
+        self, 
+        bot_token: str, 
+        chat_id: str, 
+        notifier: Notifier,
+        chat_thread_id: str | None = None,
+    ):
         self.bot_token = bot_token
         self.chat_id = chat_id
+        self.chat_thread_id = chat_thread_id
         self._notifier = notifier
 
     def is_enabled(self) -> bool:
@@ -47,17 +54,21 @@ class TelegramNotifier:
         return True
 
     def send_message(self, message: str):
+        data = {
+            'chat_id': self.chat_id,
+            'text': message,
+            'parse_mode': 'HTML',
+            'disable_web_page_preview': True,
+            'disable_notifications': True,
+        }
+        if self.chat_thread_id is not None:
+            data['message_thread_id'] = self.chat_thread_id
+        
         try:
             self._make_api_call(
                 'post',
                 'sendMessage',
-                json={
-                    'chat_id': self.chat_id,
-                    'text': message,
-                    'parse_mode': 'HTML',
-                    'disable_web_page_preview': True,
-                    'disable_notifications': True,
-                },
+                json=data,
                 timeout=3,
             )
         except requests.exceptions.Timeout:
@@ -86,6 +97,7 @@ class Notifier:
         self.telegram_notifier = TelegramNotifier(
             bot_token=self.config['telegram'].get('bot_id'),
             chat_id=self.config['telegram'].get('chat_id'),
+            chat_thread_id=self.config['telegram'].get('chat_thread_id'),
             notifier=self,
         )
 
